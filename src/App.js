@@ -1,22 +1,76 @@
+/* global chrome */
+import { useState, useEffect } from 'react';
 import logo from './logo.svg';
 import './App.css';
+import hljs from 'highlight.js';
+import axios from 'axios';
 
+/* Config */
+
+hljs = require('highlight.js');
+
+const OPENAI_API_KEY = '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';
+
+const headers = {
+  'Content-Type': 'application/json',
+  'Authorization': `Bearer ${OPENAI_API_KEY}`
+};
+
+function formatInput(code) {
+  console.log(code);
+
+  return {
+    'prompt': `Convert the following code to human-readable text:\n\n${code}\n\n`
+  }
+};
+
+/* Main component */
 function App() {
+  const [text, setText] = useState(0);
+  const [response, setResponse] = useState('Insert some code');
+
+  useEffect(() => {
+    chrome.storage.local.get(['code_text']).then((result) => {
+
+      setText(result.code_text);
+
+      if (result.code_text !== '') {
+
+        hljs.highlightAll();
+
+        axios.post('https://api.openai.com/v1/engines/davinci-codex/completions', formatInput(result.code_text), { headers })
+          .then(response => {
+            console.log(response)
+            setResponse(response.data.choices[0].text);
+          })
+          .catch(error => {
+            console.error(error);
+          });
+      }
+
+
+    })
+  }, [text]);
+
   return (
     <div className="App">
+      <div className="code-box input">
+        <pre>
+          <code>
+            {text}
+          </code>
+        </pre>
+
+        <div className='response'>
+        {response != '' ? <span>{response}</span> : null}
+
+      </div>
+      </div>
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
-          Edit <code>src/App.js</code> and save to reload.
+          Select some <code>code</code> and open the extension.
         </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
       </header>
     </div>
   );
