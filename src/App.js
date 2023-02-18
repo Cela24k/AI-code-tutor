@@ -20,7 +20,10 @@ function formatInput(code) {
   console.log(code);
 
   return {
-    'prompt': `Convert the following code to human-readable text:\n\n${code}\n\n`
+    "temperature": 0.5,
+    "max_tokens": 200,
+    'prompt': `Convert in human language the following code: \n
+    ${code}`
   }
 };
 
@@ -38,7 +41,7 @@ function App() {
 
         hljs.highlightAll();
 
-        axios.post('https://api.openai.com/v1/engines/davinci-codex/completions', formatInput(result.code_text), { headers })
+        axios.post('https://api.openai.com/v1/engines/text-davinci-003/completions', formatInput(result.code_text), { headers })
           .then(response => {
             console.log(response)
             setResponse(response.data.choices[0].text);
