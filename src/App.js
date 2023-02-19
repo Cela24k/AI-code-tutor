@@ -7,7 +7,7 @@ import axios from 'axios';
 
 /* Config */
 
-const OPENAI_API_KEY = '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';
+const OPENAI_API_KEY = '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';
 
 const headers = {
   'Content-Type': 'application/json',
@@ -29,29 +29,32 @@ function App() {
   const [response, setResponse] = useState('Insert some code');
 
   useEffect(() => {
-    chrome.storage.local.get(['code_text']).then((result) => {
+    
+    try {
+      chrome.storage.local.get(['code_text']).then((result) => {
 
-      setText(result.code_text);
-
-      if (result.code_text !== '') {
-
-        var highres = hljs.highlightAuto(result.code_text);
-
-        console.log(highres);
-
-        hljs.highlightAll();
-
-        axios.post('https://api.openai.com/v1/engines/text-davinci-003/completions', formatInput(result.code_text), { headers })
-          .then(response => {
-            setResponse(response.data.choices[0].text);
-          })
-          .catch(error => {
-            console.error(error);
-          });
-      }
-
-
-    })
+        setText(result.code_text);
+  
+        if (result.code_text !== '') {
+  
+          var highres = hljs.highlightAuto(result.code_text);
+  
+          console.log(highres);
+  
+          hljs.highlightAll();
+  
+          axios.post('https://api.openai.com/v1/engines/text-davinci-003/completions', formatInput(result.code_text), { headers })
+            .then(response => {
+              setResponse(response.data.choices[0].text);
+            })
+            .catch(error => {
+              console.error(error);
+            });
+        }
+      })
+    } catch (error) {
+      console.log(error);
+    }
   }, [text]);
 
   return (
