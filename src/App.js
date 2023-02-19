@@ -7,8 +7,6 @@ import axios from 'axios';
 
 /* Config */
 
-hljs = require('highlight.js');
-
 const OPENAI_API_KEY = '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';
 
 const headers = {
@@ -36,6 +34,10 @@ function App() {
       setText(result.code_text);
 
       if (result.code_text !== '') {
+
+        var highres = hljs.highlightAuto(result.code_text);
+
+        console.log(highres);
 
         hljs.highlightAll();
 
