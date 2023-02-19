@@ -7,7 +7,7 @@ import axios from 'axios';
 
 /* Config */
 
-const OPENAI_API_KEY = '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';
+const OPENAI_API_KEY = process.env.REACT_APP_OPENAI_API_KEY;
 
 const headers = {
   'Content-Type': 'application/json',
@@ -29,7 +29,7 @@ function App() {
   const [response, setResponse] = useState('Insert some code');
 
   useEffect(() => {
-    
+
     try {
       chrome.storage.local.get(['code_text']).then((result) => {
 
