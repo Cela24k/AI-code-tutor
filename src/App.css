@@ -43,6 +43,10 @@
   height: 100%;
 }
 
+.hljs{
+  max-height: 50vh;
+}
+
 .code-box{
   background-color: #282c34;
   width: 60vw;

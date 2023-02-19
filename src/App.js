@@ -17,8 +17,6 @@ const headers = {
 };
 
 function formatInput(code) {
-  console.log(code);
-
   return {
     "temperature": 0.5,
     "max_tokens": 200,
@@ -43,7 +41,6 @@ function App() {
 
         axios.post('https://api.openai.com/v1/engines/text-davinci-003/completions', formatInput(result.code_text), { headers })
           .then(response => {
-            console.log(response)
             setResponse(response.data.choices[0].text);
           })
           .catch(error => {
@@ -59,7 +56,7 @@ function App() {
     <div className="App">
       <div className="code-box input">
         <pre>
-          <code>
+          <code >
             {text}
           </code>
         </pre>
